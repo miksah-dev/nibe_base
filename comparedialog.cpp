@@ -24,3 +24,9 @@ void compareDialog::on_compareButtonBox_rejected()
 
 }
 
+
+void compareDialog::on_calendarWidget_activated(const QDate &date)
+{
+
+}
+

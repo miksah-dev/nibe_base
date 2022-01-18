@@ -20,6 +20,8 @@ private slots:
 
     void on_compareButtonBox_rejected();
 
+    void on_calendarWidget_activated(const QDate &date);
+
 private:
     Ui::compareDialog *dialogUi;
 };
