@@ -32,8 +32,7 @@ private slots:
 private:
     Ui::compareDialog *dialogUi;
 
-    QString file1;
-    QString file2;
+    QStringList filenames;
 };
 
 #endif // COMPAREDIALOG_H
