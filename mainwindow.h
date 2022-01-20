@@ -43,6 +43,7 @@ private slots:
     void setUpAxis(QChart *chart);
     void setupSeries(QChart *chart);
     void clearDataSets();
+    void handleCompare(QStringList files);
 
     void setSingleFileDataSet(QVector<CGraphData*> data);
 

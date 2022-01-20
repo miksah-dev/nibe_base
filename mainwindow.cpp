@@ -146,24 +146,42 @@ void MainWindow::setUpAxis(QChart *chart)
     TotElecSeries->attachAxis(axisY);
     PrioritySeries->setPen(QPen(Qt::black, 3, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
     PrioritySeries->attachAxis(axisY);
+    if (compareFiles)
+    {
+        CircleWaterInSeries2->setPen(CircleWaterInSeries->pen());
+        CircleWaterOutSeries2->setPen(CircleWaterOutSeries->pen());
+
+
+    }
 }
 
 void MainWindow::setupSeries(QChart *chart)
 {
-    if (!compareFiles)
+    chart->addSeries(CircleWaterInSeries);
+    chart->addSeries(CircleWaterOutSeries);
+    chart->addSeries(TempRoomSeries);
+    chart->addSeries(UseWaterDownSeries);
+    chart->addSeries(UseWaterUpSeries);
+    chart->addSeries(OutsideTempSeries);
+    chart->addSeries(WasteTempSeries);
+    chart->addSeries(IntakeTempSeries);
+    chart->addSeries(VaporTempSeries);
+    chart->addSeries(TotElecSeries);
+    chart->addSeries(TimeSeries);
+    chart->addSeries(PrioritySeries);
+    if (compareFiles)
     {
-        chart->addSeries(CircleWaterInSeries);
-        chart->addSeries(CircleWaterOutSeries);
-        chart->addSeries(TempRoomSeries);
-        chart->addSeries(UseWaterDownSeries);
-        chart->addSeries(UseWaterUpSeries);
-        chart->addSeries(OutsideTempSeries);
-        chart->addSeries(WasteTempSeries);
-        chart->addSeries(IntakeTempSeries);
-        chart->addSeries(VaporTempSeries);
-        chart->addSeries(TotElecSeries);
-        chart->addSeries(TimeSeries);
-        chart->addSeries(PrioritySeries);
+        chart->addSeries(CircleWaterInSeries2);
+        chart->addSeries(CircleWaterOutSeries2);
+        chart->addSeries(TempRoomSeries2);
+        chart->addSeries(UseWaterDownSeries2);
+        chart->addSeries(UseWaterUpSeries2);
+        chart->addSeries(OutsideTempSeries2);
+        chart->addSeries(WasteTempSeries2);
+        chart->addSeries(IntakeTempSeries2);
+        chart->addSeries(VaporTempSeries2);
+        chart->addSeries(TotElecSeries2);
+        chart->addSeries(PrioritySeries2);
     }
 }
 
@@ -242,6 +260,43 @@ void MainWindow::setSecondCompareSet(QVector<CGraphData*> data)
 }
 
 
+
+void MainWindow::onCompareDialogAccepted()
+{
+    QStringList fileList = cmpDialog->getFilenames();
+    compareFiles = true;
+
+    qDebug() << "MainWindow::onCompareDialogAccepted - filelist:" << fileList;
+}
+
+void MainWindow::onCompareDialogRejected()
+{
+     qDebug() << "MainWindow::onCompareDialogRejected";
+}
+
+void MainWindow::on_compareButton_clicked()
+{
+    qDebug() << "MainWindow::onCompareButtonClicked " ;
+    cmpDialog = new compareDialog(this);
+    connect(cmpDialog, &compareDialog::compareDialogAccepted, this, &MainWindow::onCompareDialogAccepted);
+    cmpDialog->show();
+}
+
+void MainWindow::handleCompare(QStringList files)
+{
+    clearDataSets();
+    // QStringList files = parser.SelectFile();
+
+
+    QVector<CGraphData*> data = parser.ParseFile(files[0]);
+    setFirstCompareSet(data)
+    data.clear();
+    data = parser.ParseFile(files[1]);
+    setSecondCompareSet(data);
+    drawGraph();
+    }
+}
+
 /*
  * Handle checkboxes
  */
@@ -305,26 +360,3 @@ void MainWindow::on_PriorityCheckbox_stateChanged()
 {
     PrioritySeries->setVisible(ui->PriorityCheckbox->isChecked());
 }
-
-void MainWindow::onCompareDialogAccepted()
-{
-    // QStringList fileList = cmpDialog->getFilenames();
-
-    qDebug() << "MainWindow::onCompareDialogAccepted - filelist:";
-}
-
-void MainWindow::onCompareDialogRejected()
-{
-     qDebug() << "MainWindow::onCompareDialogRejected";
-}
-
-
-
-void MainWindow::on_compareButton_clicked()
-{
-    qDebug() << "MainWindow::onCompareButtonClicked " ;
-    cmpDialog = new compareDialog(this);
-    connect(cmpDialog, &compareDialog::compareDialogAccepted, this, &MainWindow::onCompareDialogAccepted);
-    cmpDialog->show();
-}
-
