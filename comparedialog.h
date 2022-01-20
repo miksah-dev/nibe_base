@@ -16,7 +16,10 @@ public:
     explicit compareDialog(QWidget *parent = nullptr);
     ~compareDialog();
 
-    QStringList GetFilenames();
+    QStringList getFilenames();
+
+signals:
+    void compareDialogAccepted();
 
 private slots:
     void on_compareButtonBox_accepted();
@@ -32,7 +35,8 @@ private slots:
 private:
     Ui::compareDialog *dialogUi;
 
-    QStringList filenames;
+    QString file1;
+    QString file2;
 };
 
 #endif // COMPAREDIALOG_H

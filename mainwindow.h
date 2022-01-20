@@ -24,6 +24,9 @@ public:
 
 private slots:
 
+    void onCompareDialogAccepted();
+    void onCompareDialogRejected();
+
     void on_pushButton_clicked();
     void on_UseWaterCheckBox_stateChanged();
     void on_CircleWaterCheckBox_stateChanged();
@@ -37,17 +40,16 @@ private slots:
     void on_PriorityCheckbox_stateChanged();
 
     void drawGraph();
-    void SetUpAxis(QChart *chart);
-    void SetupSeries(QChart *chart);
-    void ClearDataSets();
+    void setUpAxis(QChart *chart);
+    void setupSeries(QChart *chart);
+    void clearDataSets();
 
-    void SetSingleFileDataSet(QVector<CGraphData*> data);
+    void setSingleFileDataSet(QVector<CGraphData*> data);
 
-    void SetFirstCompareSet(QVector<CGraphData*> data);
-    void SetSecondCompareSet(QVector<CGraphData*> data);
+    void setFirstCompareSet(QVector<CGraphData*> data);
+    void setSecondCompareSet(QVector<CGraphData*> data);
 
     void on_compareButton_clicked();
-
 
 private:
     Ui::MainWindow *ui;
@@ -55,8 +57,6 @@ private:
     compareDialog *cmpDialog;
 
     CFileParser parser;
-
-    // temp_vapor, bt18, bt19, bt20, temp_waste, temp_in, temp_room, tot_elec, alarmsnro, calc_supply, bt1_avg, relay_base, prio
 
     // Graph series
     QSplineSeries *CircleWaterInSeries = new QSplineSeries();

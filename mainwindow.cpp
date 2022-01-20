@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->dateEdit->setDate(QDate::currentDate());
 
+    // connect(ui->compareButton, &QPushButton::clicked, [this]() { onCompareButtonClicked(); });
+
     compareFiles = false;
 
     CircleWaterInSeries->setName("Circle Water In");
@@ -38,31 +40,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ClearDataSets();
+    clearDataSets();
     QStringList files = parser.SelectFile();
     if (files[0] != "default")
     {
-
-        if (files.count()==1)
-        {
-            compareFiles = false;
-            QVector<CGraphData*> data = parser.ParseFile(files[0]);
-            SetSingleFileDataSet(data);
-        }
-        else if (files.count()>1)
-        {
-            compareFiles = true;
-            QVector<CGraphData*> data = parser.ParseFile(files[0]);
-            SetFirstCompareSet(data);
-            data.clear();
-            data = parser.ParseFile(files[1]);
-            SetSecondCompareSet(data);
-        }
+        compareFiles = false;
+        QVector<CGraphData*> data = parser.ParseFile(files[0]);
+        setSingleFileDataSet(data);
         drawGraph();
     }
 }
 
-void MainWindow::ClearDataSets()
+void MainWindow::clearDataSets()
 {
     // clear series for new data
     CircleWaterInSeries->clear();
@@ -96,9 +85,9 @@ void MainWindow::drawGraph()
 
     QChart *chart = new QChart();
 
-    SetupSeries(chart);
+    setupSeries(chart);
 
-    SetUpAxis(chart);
+    setUpAxis(chart);
 
     QString title = "Data from date: ";
     chart->setTitle(title);
@@ -115,7 +104,7 @@ void MainWindow::drawGraph()
     this->show();
 }
 
-void MainWindow::SetUpAxis(QChart *chart)
+void MainWindow::setUpAxis(QChart *chart)
 {
     QDateTimeAxis *axisX = new QDateTimeAxis;
     axisX->setTickCount(10);
@@ -159,7 +148,7 @@ void MainWindow::SetUpAxis(QChart *chart)
     PrioritySeries->attachAxis(axisY);
 }
 
-void MainWindow::SetupSeries(QChart *chart)
+void MainWindow::setupSeries(QChart *chart)
 {
     if (!compareFiles)
     {
@@ -178,7 +167,7 @@ void MainWindow::SetupSeries(QChart *chart)
     }
 }
 
-void MainWindow::SetSingleFileDataSet(QVector<CGraphData*> data)
+void MainWindow::setSingleFileDataSet(QVector<CGraphData*> data)
 {
     int ItemCount = data.count();
 
@@ -205,7 +194,7 @@ void MainWindow::SetSingleFileDataSet(QVector<CGraphData*> data)
     }
 }
 
-void MainWindow::SetFirstCompareSet(QVector<CGraphData*> data)
+void MainWindow::setFirstCompareSet(QVector<CGraphData*> data)
 {
     int ItemCount = data.count();
     // inser data to series
@@ -229,7 +218,7 @@ void MainWindow::SetFirstCompareSet(QVector<CGraphData*> data)
     }
 }
 
-void MainWindow::SetSecondCompareSet(QVector<CGraphData*> data)
+void MainWindow::setSecondCompareSet(QVector<CGraphData*> data)
 {
     int ItemCount = data.count();
     // inser data to series
@@ -317,12 +306,25 @@ void MainWindow::on_PriorityCheckbox_stateChanged()
     PrioritySeries->setVisible(ui->PriorityCheckbox->isChecked());
 }
 
-
-void MainWindow::on_compareButton_clicked()
+void MainWindow::onCompareDialogAccepted()
 {
-    cmpDialog = new compareDialog(this);
-    cmpDialog->show();
+    // QStringList fileList = cmpDialog->getFilenames();
+
+    qDebug() << "MainWindow::onCompareDialogAccepted - filelist:";
+}
+
+void MainWindow::onCompareDialogRejected()
+{
+     qDebug() << "MainWindow::onCompareDialogRejected";
 }
 
 
+
+void MainWindow::on_compareButton_clicked()
+{
+    qDebug() << "MainWindow::onCompareButtonClicked " ;
+    cmpDialog = new compareDialog(this);
+    connect(cmpDialog, &compareDialog::compareDialogAccepted, this, &MainWindow::onCompareDialogAccepted);
+    cmpDialog->show();
+}
 
