@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->CompareDayOneCheckBox->setVisible(false);
     ui->CompareDayTwoCheckBox->setVisible(false);
 
+    setCompareButtonsVisibility(false);
+
     CircleWaterInSeries->setName("Circle Water In");
     CircleWaterOutSeries->setName("Circle Water Out");
     TempRoomSeries->setName("Room Temp");
@@ -176,13 +178,18 @@ void MainWindow::setUpAxis(QChart *chart)
         TotElecSeries2->setPen(TotElecSeries->pen());
         PrioritySeries2->setPen(QPen(Qt::black, 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
 
-        auto markersList = chart->legend()->markers();
-        int i = markersList.count();
-        for (int j = 12; j<i ; j++)
-        {
-            markersList[j]->setVisible(false);
-        }
+        hideComparelegends(chart);
 
+    }
+}
+
+void MainWindow::hideComparelegends(QChart *chart)
+{
+    auto markersList = chart->legend()->markers();
+    int i = markersList.count();
+    for (int j = 12; j<i ; j++)
+    {
+        markersList[j]->setVisible(false);
     }
 }
 
@@ -297,7 +304,6 @@ void MainWindow::setSecondCompareSet(QVector<CGraphData*> data)
 }
 
 
-
 void MainWindow::onCompareDialogAccepted()
 {
     qDebug() << "MainWindow::onCompareDialogAccepted ";
@@ -305,6 +311,7 @@ void MainWindow::onCompareDialogAccepted()
     delete cmpDialog;
     qDebug() << "MainWindow::onCompareDialogAccepted - filelist:" << fileList;
     compareFiles = true;
+    setCompareButtonsVisibility(true);
 
     ui->CompareDayOneCheckBox->setVisible(true);
     ui->CompareDayTwoCheckBox->setVisible(true);
@@ -343,6 +350,33 @@ void MainWindow::handleCompare(QStringList files)
     ui->CompareDayTwoCheckBox->setText(data[0]->getDate().toString());
     drawGraph();
 }
+
+void MainWindow::setCompareButtonsVisibility(bool value)
+{
+    ui->CircleWaterCheckBox_2->setVisible(value);
+    ui->ElecCheckBox_2->setVisible(value);
+    ui->IntakeTempCheckBox_2->setVisible(value);
+    ui->OutsideTempCheckBox_2->setVisible(value);
+    ui->PriorityCheckbox_2->setVisible(value);
+    ui->RoomTempCheckBox_2->setVisible(value);
+    ui->UseWaterCheckBox_2->setVisible(value);
+    ui->VaporTempCheckBox_2->setVisible(value);
+    ui->WasteTempCheckBox_2->setVisible(value);
+}
+
+void MainWindow::setDayOneButtons(bool value)
+{
+    ui->CircleWaterCheckBox->setEnabled(value);
+    ui->UseWaterCheckBox->setEnabled(value);
+    ui->ElecCheckBox->setEnabled(value);
+    ui->IntakeTempCheckBox->setEnabled(value);
+    ui->OutsideTempCheckBox->setEnabled(value);
+    ui->PriorityCheckbox->setEnabled(value);
+    ui->RoomTempCheckBox->setEnabled(value);
+    ui->VaporTempCheckBox->setEnabled(value);
+    ui->WasteTempCheckBox->setEnabled(value);
+}
+
 
 
 /*
@@ -411,6 +445,8 @@ void MainWindow::on_PriorityCheckbox_stateChanged()
 
 void MainWindow::on_CompareDayOneCheckBox_stateChanged()
 {
+
+    setDayOneButtons(ui->CompareDayOneCheckBox->isChecked());
     UseWaterUpSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
     UseWaterDownSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
     CircleWaterInSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
@@ -438,5 +474,37 @@ void MainWindow::on_CompareDayTwoCheckBox_stateChanged()
     VaporTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
     TotElecSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
     PrioritySeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+}
+
+
+void MainWindow::on_UseWaterCheckBox_2_stateChanged()
+{
+    UseWaterUpSeries2->setVisible(ui->UseWaterCheckBox_2->isChecked());
+    UseWaterDownSeries2->setVisible(ui->UseWaterCheckBox_2->isChecked());
+}
+
+
+void MainWindow::on_CircleWaterCheckBox_2_stateChanged()
+{
+    CircleWaterInSeries2->setVisible(ui->CircleWaterCheckBox_2->isChecked());
+    CircleWaterOutSeries2->setVisible(ui->CircleWaterCheckBox_2->isChecked());
+}
+
+
+void MainWindow::on_RoomTempCheckBox_2_stateChanged()
+{
+    TempRoomSeries2->setVisible(ui->RoomTempCheckBox_2->isChecked());
+}
+
+
+void MainWindow::on_WasteTempCheckBox_2_stateChanged()
+{
+    WasteTempSeries2->setVisible(ui->WasteTempCheckBox_2->isChecked());
+}
+
+
+void MainWindow::on_OutsideTempCheckBox_2_stateChanged()
+{
+    OutsideTempSeries2->setVisible(ui->OutsideTempCheckBox_2->isChecked());
 }
 

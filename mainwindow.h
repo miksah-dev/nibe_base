@@ -40,21 +40,27 @@ private slots:
     void on_PriorityCheckbox_stateChanged();
     void on_CompareDayOneCheckBox_stateChanged();
     void on_CompareDayTwoCheckBox_stateChanged();
+    void on_UseWaterCheckBox_2_stateChanged();
+    void on_CircleWaterCheckBox_2_stateChanged();
+    void on_RoomTempCheckBox_2_stateChanged();
+    void on_WasteTempCheckBox_2_stateChanged();
+    void on_OutsideTempCheckBox_2_stateChanged();
 
     void drawGraph();
     void setUpAxis(QChart *chart);
     void setupSeries(QChart *chart);
+    void hideComparelegends(QChart *chart);
     void clearDataSets();
     void handleCompare(QStringList files);
 
     void setSingleFileDataSet(QVector<CGraphData*> data);
-
     void setFirstCompareSet(QVector<CGraphData*> data);
     void setSecondCompareSet(QVector<CGraphData*> data);
 
+    void setCompareButtonsVisibility(bool value);
+    void setDayOneButtons(bool value);
+
     void on_compareButton_clicked();
-
-
 
 private:
     Ui::MainWindow *ui;
