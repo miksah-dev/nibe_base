@@ -8,6 +8,7 @@
 #include <QChartView>
 #include <QValueAxis>
 #include <QPointF>
+#include <QLegendMarker>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->dateEdit->setDate(QDate::currentDate());
 
-    // connect(ui->compareButton, &QPushButton::clicked, [this]() { onCompareButtonClicked(); });
-
     compareFiles = false;
+    ui->CompareDayOneCheckBox->setVisible(false);
+    ui->CompareDayTwoCheckBox->setVisible(false);
 
     CircleWaterInSeries->setName("Circle Water In");
     CircleWaterOutSeries->setName("Circle Water Out");
@@ -45,7 +46,9 @@ void MainWindow::on_pushButton_clicked()
     if (files[0] != "default")
     {
         compareFiles = false;
-        QVector<CGraphData*> data = parser.ParseFile(files[0]);
+        QVector<CGraphData*> data;
+        data.clear();
+        data = parser.ParseFile(files[0]);
         setSingleFileDataSet(data);
         drawGraph();
     }
@@ -148,15 +151,44 @@ void MainWindow::setUpAxis(QChart *chart)
     PrioritySeries->attachAxis(axisY);
     if (compareFiles)
     {
+        CircleWaterInSeries2->attachAxis(axisY);
+        CircleWaterOutSeries2->attachAxis(axisY);
+        TempRoomSeries2->attachAxis(axisY);
+        OutsideTempSeries2->attachAxis(axisY);
+        WasteTempSeries2->attachAxis(axisY);
+        UseWaterDownSeries2->attachAxis(axisY);
+        UseWaterUpSeries2->attachAxis(axisY);
+        IntakeTempSeries2->attachAxis(axisY);
+        VaporTempSeries2->attachAxis(axisY);
+        TotElecSeries2->attachAxis(axisY);
+        PrioritySeries2->setPen(QPen(Qt::black, 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
+        PrioritySeries2->attachAxis(axisY);
+
         CircleWaterInSeries2->setPen(CircleWaterInSeries->pen());
         CircleWaterOutSeries2->setPen(CircleWaterOutSeries->pen());
+        TempRoomSeries2->setPen(TempRoomSeries->pen());
+        OutsideTempSeries2->setPen(OutsideTempSeries->pen());
+        WasteTempSeries2->setPen(WasteTempSeries->pen());
+        UseWaterDownSeries2->setPen(UseWaterDownSeries->pen());
+        UseWaterUpSeries2->setPen(UseWaterUpSeries->pen());
+        IntakeTempSeries2->setPen(IntakeTempSeries->pen());
+        VaporTempSeries2->setPen(VaporTempSeries->pen());
+        TotElecSeries2->setPen(TotElecSeries->pen());
+        PrioritySeries2->setPen(QPen(Qt::black, 1, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin));
 
+        auto markersList = chart->legend()->markers();
+        int i = markersList.count();
+        for (int j = 12; j<i ; j++)
+        {
+            markersList[j]->setVisible(false);
+        }
 
     }
 }
 
 void MainWindow::setupSeries(QChart *chart)
 {
+    qDebug() << "MainWindow::setupSeries ";
     chart->addSeries(CircleWaterInSeries);
     chart->addSeries(CircleWaterOutSeries);
     chart->addSeries(TempRoomSeries);
@@ -171,6 +203,7 @@ void MainWindow::setupSeries(QChart *chart)
     chart->addSeries(PrioritySeries);
     if (compareFiles)
     {
+        qDebug() << "MainWindow::setupSeries - compare";
         chart->addSeries(CircleWaterInSeries2);
         chart->addSeries(CircleWaterOutSeries2);
         chart->addSeries(TempRoomSeries2);
@@ -191,7 +224,7 @@ void MainWindow::setSingleFileDataSet(QVector<CGraphData*> data)
 
     ui->dateEdit->setDate(data[0]->getDate());
 
-    // inser data to series
+    // insert data to series
     for (int i = 0; i < ItemCount; i++)
     {
         QDateTime time;
@@ -214,8 +247,10 @@ void MainWindow::setSingleFileDataSet(QVector<CGraphData*> data)
 
 void MainWindow::setFirstCompareSet(QVector<CGraphData*> data)
 {
+    qDebug() << "MainWindow::setFirstCompareSet ";
     int ItemCount = data.count();
-    // inser data to series
+    qDebug() << "MainWindow::setFirstCompareSet - data count " << ItemCount;
+    // insert data to series
     for (int i = 0; i < ItemCount; i++)
     {
         QDateTime time;
@@ -238,8 +273,10 @@ void MainWindow::setFirstCompareSet(QVector<CGraphData*> data)
 
 void MainWindow::setSecondCompareSet(QVector<CGraphData*> data)
 {
+    qDebug() << "MainWindow::setSecondCompareSet ";
     int ItemCount = data.count();
-    // inser data to series
+    qDebug() << "MainWindow::setSecondCompareSet - data count " << ItemCount;
+    // insert data to series
     for (int i = 0; i < ItemCount; i++)
     {
         QDateTime time;
@@ -263,10 +300,17 @@ void MainWindow::setSecondCompareSet(QVector<CGraphData*> data)
 
 void MainWindow::onCompareDialogAccepted()
 {
+    qDebug() << "MainWindow::onCompareDialogAccepted ";
     QStringList fileList = cmpDialog->getFilenames();
+    delete cmpDialog;
+    qDebug() << "MainWindow::onCompareDialogAccepted - filelist:" << fileList;
     compareFiles = true;
 
-    qDebug() << "MainWindow::onCompareDialogAccepted - filelist:" << fileList;
+    ui->CompareDayOneCheckBox->setVisible(true);
+    ui->CompareDayTwoCheckBox->setVisible(true);
+
+    handleCompare(fileList);
+
 }
 
 void MainWindow::onCompareDialogRejected()
@@ -276,7 +320,7 @@ void MainWindow::onCompareDialogRejected()
 
 void MainWindow::on_compareButton_clicked()
 {
-    qDebug() << "MainWindow::onCompareButtonClicked " ;
+    qDebug() << "MainWindow::on_compareButton_clicked ";
     cmpDialog = new compareDialog(this);
     connect(cmpDialog, &compareDialog::compareDialogAccepted, this, &MainWindow::onCompareDialogAccepted);
     cmpDialog->show();
@@ -284,26 +328,30 @@ void MainWindow::on_compareButton_clicked()
 
 void MainWindow::handleCompare(QStringList files)
 {
-    clearDataSets();
-    // QStringList files = parser.SelectFile();
+    qDebug() << "MainWindow::handleCompare " ;
 
+    clearDataSets();
 
     QVector<CGraphData*> data = parser.ParseFile(files[0]);
-    setFirstCompareSet(data)
+    qDebug() << "MainWindow::handleCompare - first file parsed ";
+    setFirstCompareSet(data);
+    ui->CompareDayOneCheckBox->setText(data[0]->getDate().toString());
     data.clear();
     data = parser.ParseFile(files[1]);
+    qDebug() << "MainWindow::handleCompare - second file parsed ";
     setSecondCompareSet(data);
+    ui->CompareDayTwoCheckBox->setText(data[0]->getDate().toString());
     drawGraph();
-    }
 }
+
 
 /*
  * Handle checkboxes
  */
 void MainWindow::on_UseWaterCheckBox_stateChanged()
 {
-        UseWaterUpSeries->setVisible(ui->UseWaterCheckBox->isChecked());
-        UseWaterDownSeries->setVisible(ui->UseWaterCheckBox->isChecked());
+    UseWaterUpSeries->setVisible(ui->UseWaterCheckBox->isChecked());
+    UseWaterDownSeries->setVisible(ui->UseWaterCheckBox->isChecked());
  }
 
 
@@ -360,3 +408,35 @@ void MainWindow::on_PriorityCheckbox_stateChanged()
 {
     PrioritySeries->setVisible(ui->PriorityCheckbox->isChecked());
 }
+
+void MainWindow::on_CompareDayOneCheckBox_stateChanged()
+{
+    UseWaterUpSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    UseWaterDownSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    CircleWaterInSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    CircleWaterOutSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    TempRoomSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    WasteTempSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    OutsideTempSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    IntakeTempSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    VaporTempSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    TotElecSeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+    PrioritySeries->setVisible(ui->CompareDayOneCheckBox->isChecked());
+}
+
+
+void MainWindow::on_CompareDayTwoCheckBox_stateChanged()
+{
+    UseWaterUpSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    UseWaterDownSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    CircleWaterInSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    CircleWaterOutSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    TempRoomSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    WasteTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    OutsideTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    IntakeTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    VaporTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    TotElecSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+    PrioritySeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+}
+

@@ -37,9 +37,12 @@
     <rect>
      <x>20</x>
      <y>200</y>
-     <width>272</width>
-     <height>142</height>
+     <width>281</width>
+     <height>171</height>
     </rect>
+   </property>
+   <property name="gridVisible">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="OpenFile1">
@@ -90,38 +93,5 @@
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>compareButtonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>compareDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>compareButtonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>compareDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

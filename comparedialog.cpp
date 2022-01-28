@@ -10,18 +10,8 @@ compareDialog::compareDialog(QWidget *parent) :
     dialogUi(new Ui::compareDialog)
 {
     dialogUi->setupUi(this);
-
-    /*
-    connect(ui->horizontalSlider,
-                SIGNAL(valueChanged(int)),
-                ui->progressBar,
-                SLOT(setValue(int)));
-    */
-
     connect(dialogUi->compareButtonBox, SIGNAL(accepted()), this, SLOT(on_compareButtonBox_accepted() ) );
-    // connect(dialogUi->compareButtonBox, SIGNAL(rejected()), MainWindow, SLOT(MainWindow::OnCompareDialogRejected() ) );
 
-    // connect(checkbox, &QCheckBox::clicked, this, &FindDialog::checkboxClicked);
 }
 
 compareDialog::~compareDialog()
@@ -58,6 +48,7 @@ QStringList compareDialog::getFilenames()
 
 void compareDialog::on_compareButtonBox_accepted()
 {
+    qDebug() << "compareDialog::on_compareButtonBox_accepted";
     emit compareDialogAccepted();
 }
 

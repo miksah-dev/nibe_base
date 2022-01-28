@@ -38,6 +38,8 @@ private slots:
     void on_VaporTempCheckBox_stateChanged();
     void on_ElecCheckBox_stateChanged();
     void on_PriorityCheckbox_stateChanged();
+    void on_CompareDayOneCheckBox_stateChanged();
+    void on_CompareDayTwoCheckBox_stateChanged();
 
     void drawGraph();
     void setUpAxis(QChart *chart);
@@ -51,6 +53,8 @@ private slots:
     void setSecondCompareSet(QVector<CGraphData*> data);
 
     void on_compareButton_clicked();
+
+
 
 private:
     Ui::MainWindow *ui;
