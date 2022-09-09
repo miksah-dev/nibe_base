@@ -9,6 +9,7 @@
 #include <QValueAxis>
 #include <QPointF>
 #include <QLegendMarker>
+#include <QOpenGLWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,28 +18,55 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->dateEdit->setDate(QDate::currentDate());
 
+    chart = new QChart();
+
     compareFiles = false;
     ui->CompareDayOneCheckBox->setVisible(false);
     ui->CompareDayTwoCheckBox->setVisible(false);
+    ui->SaveImageButton->setVisible(false);
 
     setCompareButtonsVisibility(false);
 
     CircleWaterInSeries->setName("Circle Water In");
+    CircleWaterInSeries->setUseOpenGL(true);
     CircleWaterOutSeries->setName("Circle Water Out");
+    CircleWaterOutSeries->setUseOpenGL(true);
     TempRoomSeries->setName("Room Temp");
+    TempRoomSeries->setUseOpenGL(true);
     UseWaterUpSeries->setName("Water tank Up");
+    UseWaterUpSeries->setUseOpenGL(true);
     UseWaterDownSeries->setName("Water tank Down");
+    UseWaterDownSeries->setUseOpenGL(true);
     OutsideTempSeries->setName("Outside temp");
+    OutsideTempSeries->setUseOpenGL(true);
     WasteTempSeries->setName("Waste temp");
+    WasteTempSeries->setUseOpenGL(true);
     IntakeTempSeries->setName("Intake Temp");
+    IntakeTempSeries->setUseOpenGL(true);
     VaporTempSeries->setName("Vapor temp");
+    VaporTempSeries->setUseOpenGL(true);
     TotElecSeries->setName("total elec");
+    TotElecSeries->setUseOpenGL(true);
     PrioritySeries->setName("Priority");
+    PrioritySeries->setUseOpenGL(true);
+
+    CircleWaterInSeries2->setUseOpenGL(true);
+    CircleWaterOutSeries2->setUseOpenGL(true);
+    TempRoomSeries2->setUseOpenGL(true);
+    UseWaterUpSeries2->setUseOpenGL(true);
+    UseWaterDownSeries2->setUseOpenGL(true);
+    OutsideTempSeries2->setUseOpenGL(true);
+    WasteTempSeries2->setUseOpenGL(true);
+    IntakeTempSeries2->setUseOpenGL(true);
+    VaporTempSeries2->setUseOpenGL(true);
+    TotElecSeries2->setUseOpenGL(true);
+    PrioritySeries2->setUseOpenGL(true);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    clearDataSets();
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -83,30 +111,38 @@ void MainWindow::clearDataSets()
     VaporTempSeries2->clear();
     TotElecSeries2->clear();
     PrioritySeries2->clear();
+
+    QList<QAbstractAxis *> axis = chart->axes();
+    for (int i=0; i<axis.count(); i++)
+    {
+        chart->removeAxis(axis[i]);
+    }
+
+    chart->removeAllSeries();
 }
 
 void MainWindow::drawGraph()
 {
+    // chart->hide();
 
-    QChart *chart = new QChart();
 
     setupSeries(chart);
 
     setUpAxis(chart);
 
     QString title = "Data from date: ";
+    title += ui->dateEdit->date().toString();
     chart->setTitle(title);
-    // title.append(data[0]->GetDate().toString())
-
 
     QMargins marg = chart->margins();
     marg.setLeft(40);
     chart->setMargins(marg);
 
     ui->BaseView->setChart(chart);
-    ui->BaseView->setRenderHint(QPainter::Antialiasing);
+    // ui->BaseView->setRenderHint(QPainter::Antialiasing);
 
     this->show();
+    ui->SaveImageButton->setVisible(true);
 }
 
 void MainWindow::setUpAxis(QChart *chart)
@@ -377,7 +413,31 @@ void MainWindow::setDayOneButtons(bool value)
     ui->WasteTempCheckBox->setEnabled(value);
 }
 
-
+void MainWindow::SaveImage()
+{
+    qDebug() << "MainWindow::SaveImage" ;
+    QPixmap p = ui->BaseView->grab();
+    QOpenGLWidget *glWidget = ui->BaseView->findChild<QOpenGLWidget *>();
+    if (glWidget) {
+        QPainter painter(&p);
+        QPoint d =
+            glWidget->mapToGlobal(QPoint()) - ui->BaseView->mapToGlobal(QPoint());
+        painter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+        painter.drawImage(d, glWidget->grabFramebuffer());
+        painter.end();
+    }
+    QString datestring = "/Users/mikasaha/Documents/Projects/Nibe/Logs/";
+    datestring += ui->dateEdit->date().toString();
+    datestring += ".png";
+    if (p.save(datestring, "PNG"))
+    {
+        qDebug() << "Kuva tallennettu" ;
+    }
+    else
+    {
+        qDebug() << "Ei onnistunut" ;
+    }
+}
 
 /*
  * Handle checkboxes
@@ -474,6 +534,12 @@ void MainWindow::on_CompareDayTwoCheckBox_stateChanged()
     VaporTempSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
     TotElecSeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
     PrioritySeries2->setVisible(ui->CompareDayTwoCheckBox->isChecked());
+
+    setCompareButtonsVisibility(ui->CompareDayTwoCheckBox->isChecked());
+
+    // if (!ui->CompareDayTwoCheckBox->isChecked())
+        // hideComparelegends();
+
 }
 
 
@@ -506,5 +572,11 @@ void MainWindow::on_WasteTempCheckBox_2_stateChanged()
 void MainWindow::on_OutsideTempCheckBox_2_stateChanged()
 {
     OutsideTempSeries2->setVisible(ui->OutsideTempCheckBox_2->isChecked());
+}
+
+
+void MainWindow::on_SaveImageButton_clicked()
+{
+    SaveImage();
 }
 

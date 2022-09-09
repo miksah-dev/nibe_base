@@ -7,7 +7,7 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QChart>
-#include <qsplineseries.h>
+#include <QLineSeries.h>
 #include <QLineSeries>
 
 QT_BEGIN_NAMESPACE
@@ -45,6 +45,10 @@ private slots:
     void on_RoomTempCheckBox_2_stateChanged();
     void on_WasteTempCheckBox_2_stateChanged();
     void on_OutsideTempCheckBox_2_stateChanged();
+    void on_compareButton_clicked();
+    void on_SaveImageButton_clicked();
+
+private:
 
     void drawGraph();
     void setUpAxis(QChart *chart);
@@ -60,8 +64,7 @@ private slots:
     void setCompareButtonsVisibility(bool value);
     void setDayOneButtons(bool value);
 
-    void on_compareButton_clicked();
-
+    void SaveImage();
 private:
     Ui::MainWindow *ui;
 
@@ -69,32 +72,34 @@ private:
 
     CFileParser parser;
 
+    QChart *chart;
+
     // Graph series
-    QSplineSeries *CircleWaterInSeries = new QSplineSeries();
-    QSplineSeries *CircleWaterOutSeries = new QSplineSeries();
-    QSplineSeries *TempRoomSeries = new QSplineSeries();
-    QSplineSeries *UseWaterUpSeries = new QSplineSeries();
-    QSplineSeries *UseWaterDownSeries = new QSplineSeries();
-    QSplineSeries *OutsideTempSeries = new QSplineSeries();
-    QSplineSeries *WasteTempSeries = new QSplineSeries();
-    QSplineSeries *IntakeTempSeries = new QSplineSeries();
-    QSplineSeries *VaporTempSeries = new QSplineSeries();
-    QSplineSeries *TotElecSeries = new QSplineSeries();
+    QLineSeries *CircleWaterInSeries = new QLineSeries();
+    QLineSeries *CircleWaterOutSeries = new QLineSeries();
+    QLineSeries *TempRoomSeries = new QLineSeries();
+    QLineSeries *UseWaterUpSeries = new QLineSeries();
+    QLineSeries *UseWaterDownSeries = new QLineSeries();
+    QLineSeries *OutsideTempSeries = new QLineSeries();
+    QLineSeries *WasteTempSeries = new QLineSeries();
+    QLineSeries *IntakeTempSeries = new QLineSeries();
+    QLineSeries *VaporTempSeries = new QLineSeries();
+    QLineSeries *TotElecSeries = new QLineSeries();
     QLineSeries *PrioritySeries = new QLineSeries();
 
-    QSplineSeries *CircleWaterInSeries2 = new QSplineSeries();
-    QSplineSeries *CircleWaterOutSeries2 = new QSplineSeries();
-    QSplineSeries *TempRoomSeries2 = new QSplineSeries();
-    QSplineSeries *UseWaterUpSeries2 = new QSplineSeries();
-    QSplineSeries *UseWaterDownSeries2 = new QSplineSeries();
-    QSplineSeries *OutsideTempSeries2 = new QSplineSeries();
-    QSplineSeries *WasteTempSeries2 = new QSplineSeries();
-    QSplineSeries *IntakeTempSeries2 = new QSplineSeries();
-    QSplineSeries *VaporTempSeries2 = new QSplineSeries();
-    QSplineSeries *TotElecSeries2 = new QSplineSeries();
+    QLineSeries *CircleWaterInSeries2 = new QLineSeries();
+    QLineSeries *CircleWaterOutSeries2 = new QLineSeries();
+    QLineSeries *TempRoomSeries2 = new QLineSeries();
+    QLineSeries *UseWaterUpSeries2 = new QLineSeries();
+    QLineSeries *UseWaterDownSeries2 = new QLineSeries();
+    QLineSeries *OutsideTempSeries2 = new QLineSeries();
+    QLineSeries *WasteTempSeries2 = new QLineSeries();
+    QLineSeries *IntakeTempSeries2 = new QLineSeries();
+    QLineSeries *VaporTempSeries2 = new QLineSeries();
+    QLineSeries *TotElecSeries2 = new QLineSeries();
     QLineSeries *PrioritySeries2 = new QLineSeries();
 
-    QSplineSeries *TimeSeries = new QSplineSeries();
+    QLineSeries *TimeSeries = new QLineSeries();
 
     bool compareFiles;
 };
