@@ -24,9 +24,6 @@ public:
 
 private slots:
 
-    void onCompareDialogAccepted();
-    void onCompareDialogRejected();
-
     void on_pushButton_clicked();
     void on_UseWaterCheckBox_stateChanged();
     void on_CircleWaterCheckBox_stateChanged();
@@ -38,14 +35,6 @@ private slots:
     void on_VaporTempCheckBox_stateChanged();
     void on_ElecCheckBox_stateChanged();
     void on_PriorityCheckbox_stateChanged();
-    void on_CompareDayOneCheckBox_stateChanged();
-    void on_CompareDayTwoCheckBox_stateChanged();
-    void on_UseWaterCheckBox_2_stateChanged();
-    void on_CircleWaterCheckBox_2_stateChanged();
-    void on_RoomTempCheckBox_2_stateChanged();
-    void on_WasteTempCheckBox_2_stateChanged();
-    void on_OutsideTempCheckBox_2_stateChanged();
-    void on_compareButton_clicked();
     void on_SaveImageButton_clicked();
 
 private:
@@ -53,15 +42,9 @@ private:
     void drawGraph();
     void setUpAxis(QChart *chart);
     void setupSeries(QChart *chart);
-    void hideComparelegends(QChart *chart);
+
     void clearDataSets();
-    void handleCompare(QStringList files);
-
     void setSingleFileDataSet(QVector<CGraphData*> data);
-    void setFirstCompareSet(QVector<CGraphData*> data);
-    void setSecondCompareSet(QVector<CGraphData*> data);
-
-    void setCompareButtonsVisibility(bool value);
     void setDayOneButtons(bool value);
 
     void SaveImage();
@@ -75,31 +58,20 @@ private:
     QChart *chart;
 
     // Graph series
-    QLineSeries *CircleWaterInSeries = new QLineSeries();
-    QLineSeries *CircleWaterOutSeries = new QLineSeries();
-    QLineSeries *TempRoomSeries = new QLineSeries();
-    QLineSeries *UseWaterUpSeries = new QLineSeries();
-    QLineSeries *UseWaterDownSeries = new QLineSeries();
-    QLineSeries *OutsideTempSeries = new QLineSeries();
-    QLineSeries *WasteTempSeries = new QLineSeries();
-    QLineSeries *IntakeTempSeries = new QLineSeries();
-    QLineSeries *VaporTempSeries = new QLineSeries();
-    QLineSeries *TotElecSeries = new QLineSeries();
-    QLineSeries *PrioritySeries = new QLineSeries();
+    QLineSeries *CircleWaterInSeries;
+    QLineSeries *CircleWaterOutSeries;
+    QLineSeries *TempRoomSeries;
+    QLineSeries *UseWaterUpSeries;
+    QLineSeries *UseWaterDownSeries;
+    QLineSeries *OutsideTempSeries;
+    QLineSeries *WasteTempSeries;
+    QLineSeries *IntakeTempSeries;
+    QLineSeries *VaporTempSeries;
+    QLineSeries *TotElecSeries;
+    QLineSeries *PrioritySeries;
+    QLineSeries *AlarmSeries;
 
-    QLineSeries *CircleWaterInSeries2 = new QLineSeries();
-    QLineSeries *CircleWaterOutSeries2 = new QLineSeries();
-    QLineSeries *TempRoomSeries2 = new QLineSeries();
-    QLineSeries *UseWaterUpSeries2 = new QLineSeries();
-    QLineSeries *UseWaterDownSeries2 = new QLineSeries();
-    QLineSeries *OutsideTempSeries2 = new QLineSeries();
-    QLineSeries *WasteTempSeries2 = new QLineSeries();
-    QLineSeries *IntakeTempSeries2 = new QLineSeries();
-    QLineSeries *VaporTempSeries2 = new QLineSeries();
-    QLineSeries *TotElecSeries2 = new QLineSeries();
-    QLineSeries *PrioritySeries2 = new QLineSeries();
-
-    QLineSeries *TimeSeries = new QLineSeries();
+    QLineSeries *TimeSeries;
 
     bool compareFiles;
 };

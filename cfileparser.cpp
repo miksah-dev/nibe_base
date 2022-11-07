@@ -80,9 +80,10 @@ QStringList CFileParser::SelectFile()
     dialog.setViewMode(QFileDialog::Detail);
     QStringList fileNames;
     if (dialog.exec())
+    {
         fileNames = dialog.selectedFiles();
-    if (fileNames[0] != "" )
-     return fileNames;
+        return fileNames;
+        }
     else
     {
         fileNames.append(("default"));
