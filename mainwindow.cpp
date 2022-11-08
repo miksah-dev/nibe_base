@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     TimeSeries = new QLineSeries();
 
-    QVBoxLayout *layout = new QVBoxLayout(parent);
+    // QVBoxLayout *layout = new QVBoxLayout(parent);
 
     chart = new QChart();
 
@@ -104,7 +104,7 @@ void MainWindow::clearDataSets()
     TotElecSeries->clear();
     TimeSeries->clear();
     PrioritySeries->clear();
-    AlarmSeries->clear();
+    // AlarmSeries->clear();
 
     QList<QAbstractAxis *> axis = chart->axes();
     for (int i=0; i<axis.count(); i++)
@@ -112,61 +112,11 @@ void MainWindow::clearDataSets()
         chart->removeAxis(axis[i]);
     }
 
-    delete CircleWaterInSeries;
-    delete CircleWaterOutSeries;
-    delete TempRoomSeries;
-    delete UseWaterUpSeries;
-    delete UseWaterDownSeries;
-    delete OutsideTempSeries;
-    delete WasteTempSeries;
-    delete IntakeTempSeries;
-    delete VaporTempSeries;
-    delete TotElecSeries;
-    delete PrioritySeries;
-    delete TimeSeries;
-    delete AlarmSeries;
-
-    CircleWaterInSeries = new QLineSeries();
-    CircleWaterOutSeries = new QLineSeries();
-    TempRoomSeries = new QLineSeries();
-    UseWaterUpSeries = new QLineSeries();
-    UseWaterDownSeries = new QLineSeries();
-    OutsideTempSeries = new QLineSeries();
-    WasteTempSeries = new QLineSeries();
-    IntakeTempSeries = new QLineSeries();
-    VaporTempSeries = new QLineSeries();
-    TotElecSeries = new QLineSeries();
-    PrioritySeries = new QLineSeries();
-    AlarmSeries = new QLineSeries();
-
-    TimeSeries = new QLineSeries();
-
-    CircleWaterInSeries->setName("Circle Water In");
-    CircleWaterInSeries->setUseOpenGL(true);
-    CircleWaterOutSeries->setName("Circle Water Out");
-    CircleWaterOutSeries->setUseOpenGL(true);
-    TempRoomSeries->setName("Room Temp");
-    TempRoomSeries->setUseOpenGL(true);
-    UseWaterUpSeries->setName("Water tank Up");
-    UseWaterUpSeries->setUseOpenGL(true);
-    UseWaterDownSeries->setName("Water tank Down");
-    UseWaterDownSeries->setUseOpenGL(true);
-    OutsideTempSeries->setName("Outside temp");
-    OutsideTempSeries->setUseOpenGL(true);
-    WasteTempSeries->setName("Waste temp");
-    WasteTempSeries->setUseOpenGL(true);
-    IntakeTempSeries->setName("Intake Temp");
-    IntakeTempSeries->setUseOpenGL(true);
-    VaporTempSeries->setName("Vapor temp");
-    VaporTempSeries->setUseOpenGL(true);
-    TotElecSeries->setName("total elec");
-    TotElecSeries->setUseOpenGL(true);
-    PrioritySeries->setName("Priority");
-    PrioritySeries->setUseOpenGL(true);
-    AlarmSeries->setName("Alarms");
-    AlarmSeries->setUseOpenGL(true);
-
-    chart = new QChart();
+    QList<QAbstractSeries *> series = chart->series();
+    for (int j=0; j>series.count(); j++)
+    {
+        chart->removeSeries(series[j]);
+    }
 }
 
 void MainWindow::drawGraph()
