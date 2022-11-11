@@ -45,6 +45,7 @@ private:
 
     void clearDataSets();
     void setSingleFileDataSet(QVector<CGraphData*> data);
+    void calculatePowerCon(QVector<CGraphData*> data);
     void setDayOneButtons(bool value);
 
     void SaveImage();

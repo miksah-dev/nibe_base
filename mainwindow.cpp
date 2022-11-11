@@ -84,6 +84,7 @@ void MainWindow::on_pushButton_clicked()
         QVector<CGraphData*> data;
         data.clear();
         data = parser.ParseFile(files[0]);
+        calculatePowerCon(data);
         setSingleFileDataSet(data);
         drawGraph();
     }
@@ -119,6 +120,31 @@ void MainWindow::clearDataSets()
     }
 }
 
+void MainWindow::calculatePowerCon(QVector<CGraphData *> data)
+{
+    int ItemCount = data.count();
+
+    double usedPower = 0;
+    int powercounts = 0;
+
+    // time diff per line for consumption counting
+    double diff = data[0]->getTime().secsTo(data[1]->getTime());
+
+    // insert data to series
+    for (int i = 0; i < ItemCount; i++)
+    {
+        if (data[i]->getElecConsump() > 0)
+        {
+            usedPower = usedPower + data[i]->getElecConsump();
+            powercounts++;
+        }
+    }
+    usedPower = usedPower/powercounts;
+    qDebug() << "MainWindow::calculatePowerCon - diff: " << diff;
+    qDebug() << "MainWindow::calculatePowerCon - count: " << powercounts;
+    qDebug() << "MainWindow::calculatePowerCon - powwer kW/h: " << usedPower;
+}
+
 void MainWindow::drawGraph()
 {
     setupSeries(chart);
@@ -151,17 +177,18 @@ void MainWindow::setUpAxis(QChart *chart)
     TimeSeries->setVisible(false);
 
     QCategoryAxis *axisC = new QCategoryAxis;
+    axisC->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
     axisC->setMin(0);
     axisC->setMax(60);
-    axisC->setStartValue(25);
+    axisC->setStartValue(0);
     axisC->append("Idle/thawing", 20);
     axisC->append("Water", 30);
     axisC->append("Heating", 50);
     axisC->append("Transfer", 60);
-    // chart->addAxis(axisC, Qt::AlignLeft);
+    chart->addAxis(axisC, Qt::AlignLeft);
 
     QValueAxis *axisY = new QValueAxis;
-    axisY->setRange(-25, 60);
+    axisY->setRange(-30, 65);
     axisY->setTickAnchor(0);
     axisY->setTickType(QValueAxis::TicksDynamic);
     axisY->setTickInterval(10);
