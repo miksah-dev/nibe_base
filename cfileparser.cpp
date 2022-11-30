@@ -41,7 +41,7 @@ void CFileParser::ParseLine(QString line)
     list = line.split(QRegularExpression("\\s+"));
     if (list.size() < 22)
     {
-        printf("list size: %lli, returnting", list.size());
+        printf("list size: %lli, returning", list.size());
         return;
     }
     CGraphData *dataItem = new(CGraphData);
