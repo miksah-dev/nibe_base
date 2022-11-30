@@ -38,8 +38,13 @@ QVector<CGraphData*> CFileParser::ParseFile(QString fileName)
 void CFileParser::ParseLine(QString line)
 {
     QStringList list;
-    CGraphData *dataItem = new(CGraphData);
     list = line.split(QRegularExpression("\\s+"));
+    if (list.size() < 22)
+    {
+        printf("list size: %lli, returnting", list.size());
+        return;
+    }
+    CGraphData *dataItem = new(CGraphData);
     // Date
     QDate date = QDate::fromString(list[0],"yyyy-MM-dd");
     dataItem->setDate(date);
