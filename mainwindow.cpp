@@ -124,6 +124,7 @@ void MainWindow::calculatePowerCon(QVector<CGraphData *> data)
 {
     int ItemCount = data.count();
 
+    double averagePower = 0;
     double usedPower = 0;
     int powercounts = 0;
 
@@ -135,14 +136,21 @@ void MainWindow::calculatePowerCon(QVector<CGraphData *> data)
     {
         if (data[i]->getElecConsump() > 0)
         {
-            usedPower = usedPower + data[i]->getElecConsump();
+            averagePower = averagePower + data[i]->getElecConsump();
             powercounts++;
         }
     }
-    usedPower = usedPower/powercounts;
+    averagePower = averagePower/powercounts; // awerage power on logged cycles
+    double hourDivider = 3600/diff; // ehat is the divider for hour based consumption
+    usedPower = averagePower*(powercounts/hourDivider);
+    QString powerStr = QString::number(usedPower);
+    powerStr.append(" kWh");
+
+    ui->PowerLabel->setText(powerStr);
+
     qDebug() << "MainWindow::calculatePowerCon - diff: " << diff;
     qDebug() << "MainWindow::calculatePowerCon - count: " << powercounts;
-    qDebug() << "MainWindow::calculatePowerCon - powwer kW/h: " << usedPower;
+    qDebug() << "MainWindow::calculatePowerCon - aveage powwer, power kW/h:  , hour divider" << averagePower <<  usedPower << hourDivider;
 }
 
 void MainWindow::drawGraph()
@@ -164,6 +172,8 @@ void MainWindow::drawGraph()
 
     this->show();
     ui->SaveImageButton->setVisible(true);
+
+    ui->BaseView->update();
 }
 
 void MainWindow::setUpAxis(QChart *chart)

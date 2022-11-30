@@ -7,7 +7,7 @@
 #include <QMainWindow>
 #include <QGraphicsView>
 #include <QChart>
-#include <QLineSeries.h>
+#include <qlineseries.h>
 #include <QLineSeries>
 
 QT_BEGIN_NAMESPACE
