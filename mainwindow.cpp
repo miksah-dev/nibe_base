@@ -84,9 +84,15 @@ void MainWindow::on_pushButton_clicked()
         QVector<CGraphData*> data;
         data.clear();
         data = parser.ParseFile(files[0]);
+        if (data.size() > 0)
+        {
         calculatePowerCon(data);
         setSingleFileDataSet(data);
         drawGraph();
+        } else
+        {
+        printf("\nFile read ERROR: Nothing to print");
+        }
     }
 }
 
