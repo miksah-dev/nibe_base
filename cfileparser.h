@@ -17,7 +17,7 @@ public:
 
     QVector<CGraphData*> ParseFile(QString fileName);
     QStringList SelectFile();
-
+    void clear();
 
 
 signals:
@@ -26,6 +26,7 @@ signals:
 private:
 
     void ParseLine(QString line);
+
 
     QVector <CGraphData*> FileDataVector;
 };
