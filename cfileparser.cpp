@@ -13,6 +13,11 @@ CFileParser::CFileParser(QWidget *parent)
 
 }
 
+void CFileParser::clear()
+{
+    FileDataVector.clear();
+}
+
 QVector<CGraphData*> CFileParser::ParseFile(QString fileName)
 {
 

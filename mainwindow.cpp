@@ -92,6 +92,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::clearDataSets()
 {
+    parser.clear();
     // clear series for new data
     CircleWaterInSeries->clear();
     CircleWaterOutSeries->clear();
@@ -245,7 +246,7 @@ void MainWindow::setSingleFileDataSet(QVector<CGraphData*> data)
 {
     int ItemCount = data.count();
 
-    ui->dateEdit->setDate(data[0]->getDate());
+    ui->dateEdit->setDate(data.at(0)->getDate());
 
     // insert data to series
     for (int i = 0; i < ItemCount; i++)
@@ -253,19 +254,19 @@ void MainWindow::setSingleFileDataSet(QVector<CGraphData*> data)
         QDateTime time;
         time.setTime(data[i]->getTime());
 
-        CircleWaterInSeries->append(i, data[i]->getCircleWaterIn());
-        CircleWaterOutSeries->append(i, data[i]->getCircleWaterOut());
-        TempRoomSeries->append(i, data[i]->getTempRoom());
-        UseWaterDownSeries->append(i, data[i]->getUseWaterDown());
-        UseWaterUpSeries->append(i, data[i]->getUseWaterUp());
-        OutsideTempSeries->append(i, data[i]->getTempOut());
-        WasteTempSeries->append(i, data[i]->getTempWaste());
-        IntakeTempSeries->append(i, data[i]->getTempIntake());
-        VaporTempSeries->append(i, data[i]->getTempVapor());
-        TotElecSeries->append(i, data[i]->getElecConsump());
+        CircleWaterInSeries->append(i, data.at(i)->getCircleWaterIn());
+        CircleWaterOutSeries->append(i, data.at(i)->getCircleWaterOut());
+        TempRoomSeries->append(i, data.at(i)->getTempRoom());
+        UseWaterDownSeries->append(i, data.at(i)->getUseWaterDown());
+        UseWaterUpSeries->append(i, data.at(i)->getUseWaterUp());
+        OutsideTempSeries->append(i, data.at(i)->getTempOut());
+        WasteTempSeries->append(i, data.at(i)->getTempWaste());
+        IntakeTempSeries->append(i, data.at(i)->getTempIntake());
+        VaporTempSeries->append(i, data.at(i)->getTempVapor());
+        TotElecSeries->append(i, data.at(i)->getElecConsump());
         TimeSeries->append(time.toMSecsSinceEpoch(), i);
-        PrioritySeries->append(i, data[i]->getPriority());
-        // AlarmSeries->append(i, data[i]->getAlarmNro());
+        PrioritySeries->append(i, data.at(i)->getPriority());
+        // AlarmSeries->append(i, data.at(i)->getAlarmNro());
     }
 }
 
